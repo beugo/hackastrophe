@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Dank Secure Meme Website{% endblock %}</title>
+    <style>
+        body {
+            background-image: url('https://i.pinimg.com/originals/77/f5/7f/77f57fc5d06dc6642b0d96ef200cb550.gif');
+            background-size: cover;
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            color: #000080;
+            text-align: center;
+            overflow-x: hidden;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 228, 181, 0.9); /* Semi-transparent background */
+            border: 5px dashed #8b0000;
+            box-shadow: 10px 10px 5px #888888;
+            position: relative;
+            z-index: 2;
+        }
+        .button {
+            background-color: #ff4500;
+            border: 2px solid #000;
+            color: white;
+            padding: 10px 24px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+        .button:hover {
+            transform: scale(1.1);
+            background-color: #ff6347;
+        }
+        h1, h2, .alert {
+            font-family: "Impact", sans-serif; /* Classic meme font */
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .alert {
+            padding: 20px;
+            background-color: #f44336; 
+            color: white;
+            margin-bottom: 15px;
+            position: relative;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+            border: 3px solid black;
+        }
+        .success {
+            background-color: #4CAF50;
+        }
+        .info {
+            background-color: #2196F3;
+        }
+        .warning {
+            background-color: #ff9800;
+        }
+        .fade-out {
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .closebtn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .closebtn:hover {
+            color: black;
+        }
+        .floating-meme {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            animation: float 5s ease-in-out infinite;
+            z-index: 1;
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+        .tab {
+            overflow: hidden;
+            margin-bottom: 20px;
+        }   
+
+        .tab button {
+            background-color: #ffff66; /* Bright yellow background for a fun look */
+            float: left;
+            border: 2px dashed #8b0000; /* Dashed border to match the meme style */
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: background-color 0.3s, transform 0.2s; /* Added transform for scaling effect */
+            font-size: 20px;
+            font-family: "Impact", sans-serif; /* Classic meme font */
+            color: #000080; /* Dark blue text color */
+            text-transform: uppercase; /* Text in uppercase for a meme-like impact */
+            text-shadow: 2px 2px #ff4500; /* Adds a shadow to enhance the meme style */
+        }
+
+        .tab button:hover {
+            background-color: #ff6347; /* Changes to a bright red-orange on hover */
+            transform: scale(1.1); /* Scales up slightly on hover for a playful effect */
+            box-shadow: 0 0 10px #ff4500; /* Adds a glowing effect on hover */
+        }
+
+        .tab button.active {
+            background-color: #ff4500; /* Highlight active tab button with bright orange */
+            color: #ffffff; /* White text color for active button */
+            border-bottom: none; /* Remove bottom border to indicate it's the active tab */
+            transform: scale(1.05); /* Slightly scale the active button */
+            text-shadow: 2px 2px #000; /* Dark shadow to make the text pop more */
+        }
+
+        .tabcontent {
+            display: none;
+            animation: fadeEffect 0.5s;
+            border: 5px dashed #8b0000; /* Dashed border around the content to keep the meme aesthetic */
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+        }
+
+        @keyframes fadeEffect {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+    </style>
+    <!-- SocketIO -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+    <img src="https://static.wikia.nocookie.net/character-stats-and-profiles/images/c/c7/DZuvg1d.png" class="floating-meme" style="top: 10%; left: 5%;" alt="Doge"> <!-- Floating Doge Meme -->
+    <img src="https://static.wikia.nocookie.net/the-pgm5-wiki/images/4/4a/Nyan-Cat-PNG-Transparent.png" class="floating-meme" style="bottom: 10%; right: 5%;" alt="Pepe"> <!-- Floating Pepe Meme -->
+
+    <div class="container">
+        <!-- Flashed Messages -->
+        <div id="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert {% if category == 'success' %}success{% elif category == 'info' %}info{% elif category == 'warning' %}warning{% else %}alert{% endif %}" role="alert">
+                            {{ message }}
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';" aria-label="Close">&times;</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <!-- Main Content -->
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        // Function to automatically dismiss alerts after 30 seconds
+        function autoDismissAlerts() {
+            var alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                var dismissTimer = setTimeout(function() {
+                    alert.classList.add('fade-out');
+                    setTimeout(function() {
+                        if (alert.parentElement) {
+                            alert.parentElement.removeChild(alert);
+                        }
+                    }, 500);
+                }, 30000);
+
+                // Pause timer on hover
+                alert.addEventListener('mouseover', function() {
+                    clearTimeout(dismissTimer);
+                });
+
+                // Resume timer on mouseout
+                alert.addEventListener('mouseout', function() {
+                    dismissTimer = setTimeout(function() {
+                        alert.classList.add('fade-out');
+                        setTimeout(function() {
+                            if (alert.parentElement) {
+                            alert.parentElement.removeChild(alert);
+                            }
+                        }, 500);
+                    }, 30000);
+                });
+            });
+        }
+
+        // Call autoDismissAlerts on page load for existing alerts
+        document.addEventListener('DOMContentLoaded', function() {
+            autoDismissAlerts();
+        });
+
+        var socket = io();
+
+        socket.on('user_logged_in', function(data) {
+            var flashMessages = document.getElementById('flash-messages');
+            var newEvent = document.createElement('div');
+            newEvent.classList.add('alert', 'info'); 
+            newEvent.innerHTML = 'From <code>/api_login_event</code>: Wow, much login! username: ' + data.username + ' just logged in!<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span>';
+            flashMessages.insertBefore(newEvent, flashMessages.firstChild);
+
+            // Set up auto-dismiss for the newly added alert
+            var dismissTimer = setTimeout(function() {
+                newEvent.classList.add('fade-out');
+                setTimeout(function() {
+                    if (newEvent.parentElement) {
+                        newEvent.parentElement.removeChild(newEvent);
+                    }
+                }, 500);
+            }, 30000);
+
+            // Pause timer on hover
+            newEvent.addEventListener('mouseover', function() {
+                clearTimeout(dismissTimer);
+            });
+
+            // Resume timer on mouseout
+            newEvent.addEventListener('mouseout', function() {
+                dismissTimer = setTimeout(function() {
+                    newEvent.classList.add('fade-out');
+                    setTimeout(function() {
+                        if (newEvent.parentElement) {
+                            newEvent.parentElement.removeChild(newEvent);
+                        }
+                    }, 500);
+                }, 30000);
+            });
+        });
+    </script>
+</body>
+</html>

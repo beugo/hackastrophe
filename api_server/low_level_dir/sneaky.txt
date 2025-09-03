@@ -1,0 +1,5 @@
+My creds are api_user:martin_tik_tok_fan2 ...
+Hope no one can ssh into my account
+
+But I swear the root creds are in the /etc folder somewhere
+Can't access them anyway though

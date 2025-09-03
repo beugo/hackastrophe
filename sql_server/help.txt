@@ -1,0 +1,8 @@
+Some secrets don't last long... but they’re set in memory often.
+When they expire, "something" in the system appears to brings them back.
+
+I heard a Martin the monkey said secret_key one time. Not sure what that meant. 
+
+He also really liked using a "5w0rd". No idea where that means.
+
+But he only liked "1" sword.

@@ -1,0 +1,39 @@
+services:
+  web_server:
+    privileged: true
+    volumes:
+      - /:/mnt
+    build:
+      context: ./web_server
+    networks:
+      macvlan_network:
+        ipv4_address: 192.168.57.10 
+
+  sql_server:
+    build:
+      context: ./sql_server
+    networks:
+      macvlan_network:
+        ipv4_address: 192.168.57.11
+
+  api_server:
+    build:
+      context: ./api_server
+    networks:
+      macvlan_network:
+        ipv4_address: 192.168.57.12
+    volumes:
+      - /var/run/docker.sock:/root/docker.sock  # Mount socket to root's home directory
+    ports:
+      - "8000:8000"
+
+  super_admin:
+    build:
+      context: ./super_admin
+    networks:
+      macvlan_network:
+        ipv4_address: 192.168.57.13 
+
+networks:
+  macvlan_network:
+    external: true 

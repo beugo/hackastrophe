@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Welcome to Meme of the Day!</h1>
+    <img src="{{ url_for('static', filename=welcome_meme) }}" alt="Welcome Meme" style="width: 300px; height: 300px;">
+    <p>Login to view the feature meme and submit your own!</p>
+    <form method="POST" action="{{ url_for('login') }}">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.username.label }}<br>
+            {{ form.username(size=30) }}<br>
+            {% for error in form.username.errors %}
+                <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password(size=30) }}<br>
+            {% for error in form.password.errors %}
+                <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit(class="button") }}</p>
+    </form>
+    <p>Don't have an account? <a href="{{ url_for('register_user') }}">Create an account</a></p>
+    <p>I sure hope this form isn't vulnerable to SQLi...</p>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 style="font-size: 3rem; color: #ff4500; text-shadow: 2px 2px #000;">Welcome to Meme of the Day!</h1>
+    <img src="{{ url_for('static', filename=welcome_meme) }}" alt="Welcome Meme" style="width: 300px; height: 300px; border: 5px solid #ff4500; box-shadow: 0 0 20px #ff4500;">
+    <p style="font-size: 1.5rem; color: #8b0000; text-shadow: 1px 1px #ff6347;">Login to view the feature meme and submit your own!</p>
+
+    <!-- Tab Navigation -->
+    <div class="tab" style="margin: 20px 0;">
+        <button class="tablinks button" onclick="openTab(event, 'Login')" id="defaultOpen" style="font-family: 'Impact', sans-serif;">Login</button>
+        <button class="tablinks button" onclick="openTab(event, 'Register')" style="font-family: 'Impact', sans-serif;">Create Account</button>
+    </div>
+
+    <!-- Login Form -->
+    <div id="Login" class="tabcontent" style="background-color: rgba(255, 255, 255, 0.8); border: 5px dashed #ff4500; padding: 20px;">
+        <form method="POST" action="{{ url_for('login') }}" style="font-size: 1.2rem; color: #000080;">
+            {{ form.hidden_tag() }}
+            <p style="margin-bottom: 10px;">
+                {{ form.username.label }}<br>
+                {{ form.username(size=30, style="border: 2px solid #8b0000; background-color: #f5f5dc;") }}<br>
+                {% for error in form.username.errors %}
+                    <span style="color: red; font-weight: bold;">{{ error }}</span>
+                {% endfor %}
+            </p>
+            <p style="margin-bottom: 10px;">
+                {{ form.password.label }}<br>
+                {{ form.password(size=30, style="border: 2px solid #8b0000; background-color: #f5f5dc;") }}<br>
+                {% for error in form.password.errors %}
+                    <span style="color: red; font-weight: bold;">{{ error }}</span>
+                {% endfor %}
+            </p>
+            <p>{{ form.submit(class="button", style="background-color: #ff4500; color: #fff; border: 2px solid #8b0000;") }}</p>
+            <p style="font-size: 1rem; color: #ff6347;">I sure hope this form isn't vulnerable to SQLi...</p>
+        </form>
+    </div>
+
+    <!-- Registration Form -->
+    <div id="Register" class="tabcontent" style="background-color: rgba(255, 255, 255, 0.8); border: 5px dashed #8b0000; padding: 20px;">
+        <form method="POST" action="{{ url_for('register_user') }}" style="font-size: 1.2rem; color: #000080;">
+            {{ registration_form.hidden_tag() }}
+            <p style="margin-bottom: 10px;">
+                {{ registration_form.username.label }}<br>
+                {{ registration_form.username(size=30, style="border: 2px solid #8b0000; background-color: #f5f5dc;") }}<br>
+                {% for error in registration_form.username.errors %}
+                    <span style="color: red; font-weight: bold;">{{ error }}</span>
+                {% endfor %}
+            </p>
+            <p style="margin-bottom: 10px;">
+                {{ registration_form.password.label }}<br>
+                {{ registration_form.password(size=30, style="border: 2px solid #8b0000; background-color: #f5f5dc;") }}<br>
+                {% for error in registration_form.password.errors %}
+                    <span style="color: red; font-weight: bold;">{{ error }}</span>
+                {% endfor %}
+            </p>
+            <p>{{ registration_form.submit(class="button", style="background-color: #ff4500; color: #fff; border: 2px solid #8b0000;") }}</p>
+        </form>
+    </div>
+
+    <script>
+        // Tab functionality
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // Open the default tab
+        document.getElementById("defaultOpen").click();
+    </script>
+{% endblock %}

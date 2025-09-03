@@ -1,0 +1,2 @@
+#!/bin/bash
+export FINI_ARRAY="3B6B1F22056F2E6B34116F"

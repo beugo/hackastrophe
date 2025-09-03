@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+    <h1>Admin Dashboard</h1>
+    <p>Welcome, {{ username }}!<br>You can search submitted memes.</p>
+
+    <h2>Meme of the Day</h2>
+    {% if meme_of_the_day %}
+        <img src="{{ url_for('uploaded_file', filename=meme_of_the_day) }}" alt="Meme of the Day" style="width: 300px; height: 300px;">
+        <p>{{ meme_of_the_day }}</p>
+    {% else %}
+        <p>No memes available today!</p>
+    {% endif %}
+    
+    <!-- Search Uploads (Vulnerable) -->
+    <h2>Search Uploads</h2>
+    <form method="POST" action="{{ url_for('admin_dashboard') }}">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.query.label }}<br>
+            {{ form.query(size=50) }}<br>
+            {% for error in form.query.errors %}
+                <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit(class="button") }}</p>
+    </form>
+    
+    <!-- Display Search Results -->
+    {% if results %}
+        <h3>Search Results:</h3>
+        <pre>
+{{ results|join('\n') }}
+        </pre>
+    {% endif %}
+    
+    <!-- List All Uploads -->
+    <h2>All Uploaded Files</h2>
+    {% if images %}
+        {% for image in images %}
+            <div>
+                <img src="{{ url_for('uploaded_file', filename=image) }}" alt="{{ image }}" class="uploaded-image" style="width: 300px; height: 300px;">
+                <p>{{ image }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No files uploaded yet.</p>
+    {% endif %}
+    
+    <p><a href="{{ url_for('logout') }}" class="button">Logout</a></p>
+{% endblock %}

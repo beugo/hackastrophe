@@ -1,0 +1,8 @@
+I wonder if this suid program is really that perfect
+
+I know theres an employee table and an admin table
+
+I do like mongos
+
+- johndoe (employee)
+

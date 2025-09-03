@@ -1,0 +1,4 @@
+fastapi
+uvicorn
+requests
+pymongo==3.12.1

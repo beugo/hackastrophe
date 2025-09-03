@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}User Dashboard{% endblock %}
+
+{% block content %}
+    <h1>User Dashboard</h1>
+    <p>Welcome, {{ username }}!</p>
+    
+    <h2>Meme of the Day</h2>
+    {% if meme_of_the_day %}
+        <img src="{{ url_for('uploaded_file', filename=meme_of_the_day) }}" alt="Meme of the Day" style="width: 300px; height: 300px;">
+        <p>{{ meme_of_the_day }}</p>
+    {% else %}
+        <p>No memes available today!</p>
+    {% endif %}
+    
+    <!-- Upload Image of the Day (Red Herring) -->
+    <h2>Upload Image of the Day</h2>
+    <form method="POST" action="{{ url_for('dashboard') }}" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.file.label }}<br>
+            {{ form.file() }}<br>
+            {% for error in form.file.errors %}
+                <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit(class="button") }}</p>
+    </form>
+    
+    <!-- List Uploaded Images (Red Herring) -->
+    <h2>Your Uploaded Images</h2>
+    {% if images %}
+        <ul>
+            {% for image in images %}
+                <li>{{ image }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No images uploaded yet.</p>
+    {% endif %}
+    
+    <p><a href="{{ url_for('logout') }}" class="button">Logout</a></p>
+{% endblock %}
